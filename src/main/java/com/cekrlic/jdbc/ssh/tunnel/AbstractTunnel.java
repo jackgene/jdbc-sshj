@@ -52,7 +52,7 @@ public abstract class AbstractTunnel {
 		String localHost;
 		// Determine if it's mac:
 		String os = System.getProperty("os.name").toUpperCase();
-		if(os.contains("OS X") || os.contains("MACOS") || os.contains("MAC ")) {
+		if(os.contains("OS X") || os.contains("MACOS") || os.contains("MAC ") || System.getProperty("CIRCLE_TEST_REPORTS")!=null) {
 			localHost = "127.0.0.1";
 		} else {
 			localHost = "127.0.1." + (2 + new java.util.Random().nextInt(201));
