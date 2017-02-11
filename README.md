@@ -1,6 +1,6 @@
 # jdbc-sshj
 
-[![Build status](https://circleci.com/gh/bokysan/jdbc-sshj.png?circle-token=0d4d10946e3f339feb4c44fd72d85087936ff4db)](https://circleci.com/gh/bokysan/jdbc-sshj)
+[![Build status](https://circleci.com/gh/bokysan/jdbc-sshj.svg?style=shield&circle-token=0d4d10946e3f339feb4c44fd72d85087936ff4db)](https://circleci.com/gh/bokysan/jdbc-sshj)
 
 A JDBC Driver Wrapper which connects over SSH to the target database. Please note that only one port is fowarded,
 so forget about connecting to Oracle on Windows.
@@ -108,4 +108,4 @@ You can setup your Maven dependencies like this:
 
 ## Download
 
-Download artifacts directly from CircleCI:
+Download artifacts directly from CircleCI: https://circleci.com/gh/bokysan/jdbc-sshj

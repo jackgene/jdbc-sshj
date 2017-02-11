@@ -10,6 +10,8 @@ test:
   override:
     - mvn integration-test
   post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/testng
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/testng/ \;
     - mkdir -p $CIRCLE_ARTIFACTS
     - cp target/*.jar $CIRCLE_ARTIFACTS
 
