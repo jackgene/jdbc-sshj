@@ -61,7 +61,7 @@ public class SshJDriver implements Driver {
 			throw new SQLException("You need to supply the actual URL to connect to!");
 		}
 
-		Driver driver = findDriver(realUrl);
+		// SshTunnel will also load 3rd-party driver, if needed.
 		tunnel = new SshTunnel(ourURL);
 		tunnel.start();
 
@@ -69,6 +69,7 @@ public class SshJDriver implements Driver {
 		realUrl = realUrl.replaceAll("\\{\\{[hH][oO][sS][tT]\\}\\}", tunnel.getLocalHost());
 
 		log.info("Proxying connection to: {}", realUrl);
+		Driver driver = findDriver(realUrl);
 		return driver.connect(realUrl, info);
 	}
 

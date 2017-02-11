@@ -72,8 +72,13 @@ public class SshTunnel {
 			throw new SQLException(e);
 		}
 
-		if(queryParameters.containsKey(DRIVERS)) {
-			final String[] drivers =  queryParameters.get(DRIVERS).split(",");
+		String drv = queryParameters.get(DRIVERS);
+		if(drv == null) {
+			// Convenience method for people such as me that don't read the documentation thorougly
+			drv = queryParameters.get("driver");
+		}
+		if(drv!=null && drv.length() > 0) {
+			final String[] drivers =  drv.split(",");
 			for(final String driver: drivers) {
 				try {
 					Class.forName(driver);
@@ -212,7 +217,7 @@ public class SshTunnel {
 
 			final LocalPortForwarder lpf = client.newLocalPortForwarder(params, ss);
 
-			Thread t = new Thread(new Runnable() {
+			runnable = new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -225,10 +230,10 @@ public class SshTunnel {
 					}
 				}
 			});
-			t.setDaemon(true);
-			t.setPriority(Thread.MIN_PRIORITY);
+			runnable.setDaemon(true);
+			runnable.setPriority(Thread.MIN_PRIORITY);
+			runnable.start();
 
-			t.start();
 			synchronized (mutex) {
 				mutex.wait(1000);
 			}
@@ -245,6 +250,11 @@ public class SshTunnel {
 	}
 
 	private void stop() {
+		if(runnable != null) {
+			runnable.interrupt();
+			runnable = null;
+		}
+
 		if(ss != null) {
 			try {
 				ss.close();
