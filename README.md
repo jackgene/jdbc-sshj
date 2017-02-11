@@ -1,5 +1,7 @@
 # jdbc-sshj
 
+[![Build status](https://circleci.com/gh/bokysan/jdbc-sshj.png?circle-token=0d4d10946e3f339feb4c44fd72d85087936ff4db)](https://circleci.com/gh/bokysan/jdbc-sshj)
+
 A JDBC Driver Wrapper which connects over SSH to the target database. Please note that only one port is fowarded,
 so forget about connecting to Oracle on Windows.
 
@@ -87,53 +89,23 @@ mvn -DskipTests clean install
 If you want to run the tests (Derby and H2 in server mode):
 
 ```
-mvn -Djdbc.ssh.username="xxx" -Djdbc.ssh.password="xxx" clean install
+mvn clean install
 ```
-
-NOTE: 
-
-If your SSH server is not running on the default port 22 and/or localhost then you can change those parameters:
-
-```
-mvn -Djdbc.ssh.username="xxx" -Djdbc.ssh.password="xxx" -Djdbc.ssh.host="192.168.0.1" -Djdbc.ssh.port="2222" clean install
-```
-
-At the moment a locally running SSH server is needed for the tests. The embedded SSH server in the unit tests is not yet 
-ready (authentication works, but port forwarding fails at the moment).
 
 ## Maven dependencies
 
-You can find the latest releases here:
+*TODO: The JAR is not available in public repositories yet*
 
-[ ![Download](https://api.bintray.com/packages/cheetah/monkeysintown/jdbc-ssh/images/download.svg) ](https://bintray.com/cheetah/monkeysintown/jdbc-ssh/_latestVersion)
-
-... or setup your Maven dependencies:
+You can setup your Maven dependencies like this:
 
 ```xml
 <dependency>
-    <groupId>com.github.monkeysintown</groupId>
-    <artifactId>jdbc-ssh</artifactId>
-    <version>1.0.9</version>
+    <groupId>com.cekrlic</groupId>
+    <artifactId>jdbc-sshj</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
-... and configure Bintray's JCenter repository in your pom.xml:
- 
-```xml
-...
-<repositories>
-    <repository>
-        <snapshots>
-            <enabled>false</enabled>
-        </snapshots>
-        <id>central</id>
-        <name>bintray</name>
-        <url>http://jcenter.bintray.com</url>
-    </repository>
-</repositories>
-...
-```
+## Download
 
-Get automatic notifications about new releases here:
-
-[ ![Get automatic notifications about new "jdbc-ssh" versions](https://www.bintray.com/docs/images/bintray_badge_color.png) ](https://bintray.com/cheetah/monkeysintown/jdbc-ssh/view?source=watch)
+Download artifacts directly from CircleCI:
