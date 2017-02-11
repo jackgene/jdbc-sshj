@@ -13,19 +13,36 @@ public abstract class JdbcSshDriverTest {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcSshDriverTest.class);
 
 	String sshUrl;
-
+	String sshNativeUrl;
 	String realUrl;
 
 	String sql;
 
+
 	@Test
-	public void testDriverRegistration() throws SQLException {
+	public void testSSHJDriverRegistration() throws SQLException {
 		boolean found = false;
 
 		for (Enumeration<Driver> drivers = DriverManager.getDrivers(); drivers.hasMoreElements(); ) {
 			Driver driver = drivers.nextElement();
 
 			if (driver.getClass().equals(SshJDriver.class)) {
+				found = true;
+				break;
+			}
+		}
+
+		assertTrue(found);
+	}
+
+	@Test
+	public void testSSHJNativeDriverRegistration() throws SQLException {
+		boolean found = false;
+
+		for (Enumeration<Driver> drivers = DriverManager.getDrivers(); drivers.hasMoreElements(); ) {
+			Driver driver = drivers.nextElement();
+
+			if (driver.getClass().equals(SshJNativeDriver.class)) {
 				found = true;
 				break;
 			}
@@ -48,10 +65,16 @@ public abstract class JdbcSshDriverTest {
 		}
 	}
 
-	@Test
+	@Test(dependsOnMethods = "testSSHJDriverRegistration")
 	public void testSshDriver() throws Exception {
 		dbConnectionTest(this.sshUrl);
 		LoggerFactory.getLogger(this.getClass()).info("Connected successfully through SSH!");
+	}
+
+	@Test(dependsOnMethods = "testSSHJNativeDriverRegistration")
+	public void testSshNativeDriver() throws Exception {
+		dbConnectionTest(this.sshNativeUrl);
+		LoggerFactory.getLogger(this.getClass()).info("Connected successfully through SSH (native)!");
 	}
 
 	@Test

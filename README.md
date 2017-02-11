@@ -17,14 +17,19 @@ To supress this behaviour, set `verify_hosts=off`.
  
 Usage is simple:
 - drop the JAR into your project (or include it as maven dependency)
-- prepend "jdbc:sshj:" command string before your URL
+- prepend with "jdbc:sshj:" or "jdbc:sshj-native:" command string before your URL
 - put the placeholder `{{port}}` in your old JDBC url.
 
 ### Syntax
 
+There are two versions of this driver: the *JDBC-SSHJ*, which uses buit-in [SSH client](https://github.com/hierynomus/sshj) and *JDBC-SSHJ-NATIVE*, which
+ spins off local `ssh` session. Each has its own advantages and downfalls:
+- *SSHJ* is more cross-platform and does not depend on any libraries
+- *SSHJ-NATIVE* can support newer OpenSSH features and can use your `.ssh/config` but it's not cross-platform. Windows users, beware.
+
 The JDBC-SSHJ uses the following syntax:
 ```
-jdbc:sshj://<host>[:<port>]
+jdbc:sshj://[user@]<host>[:<port>]
    ?remote=<host:port>
 	[&username=<ssh username>]
 	[&password=<ssh password>]
@@ -40,13 +45,30 @@ jdbc:sshj://<host>[:<port>]
 | --- | --- | --- |                         
 | *jdbc:sshj://<host>[:<port>]* | The *host* and *port* of the remote SSH server. Port is optional. | `jdbc:sshj://demo.example.org` | 
 | *remote* | The *host* and *port* of the database on the remote server. | `10.11.12.13:5432` |
-| *username* | The SSH username. | `demo` |
+| *username* | The SSH username. Alternatively, specify it before the `@` sign in the host name | `demo` |
 | *password*| The SSH password, if you want to try password authentication. | `demo123` |
-| *private.key.file* | Path to the file with a private key. | `~/.ssh/id_rsa` |
+| *public.key.file* | Path to the file with the public key. Sometimes needed if not embedded in private key or not on assumed location. | `~/.ssh/id_rsa.pub` |
+| *private.key.file* | Path to the file with a private key. Please note that [newer OpenSSH keys are not yet supported](https://github.com/hierynomus/sshj/issues/276).  | `~/.ssh/id_rsa` |
 | *private.key.password* | Password for the private key, if any. | `demo1234` |
 | *private.key.file.format* | File format. Putty private key files and OpenSSH files are accepted. By default it tries to load OPENSSH format. | `PUTTY` | 
 | *drivers* | Comma separated list of drivers (class files) to preload. | `org.postgresql.Driver` | 
 | *verify_hosts* | Supress host verification. Driver will not complain on new/unknown hosts. | `off` | 
+
+
+The JDBC-SSHJ NATIVE uses the following syntax:
+```
+jdbc:sshj-native://<any-parameters-which-you-might-send-to-ssh>
+   ?remote=<[user@]host:port>
+   ?keepalive.command=<remote_command>
+	;;;
+	<your-original-url-with-{{port}}>
+```
+| Parameter | Description | Example |                                                                       
+| --- | --- | --- |                         
+| *any-parameters-which-you-might-send-to-ssh* | Anything you type here is going to be echoed directly to the SSH command | `-c demo@demo.example.org -r` | 
+| *keepalive.command* | Command to run on the remote server to keep the session alive. If not set, your session *might* timeout. | `ping localhost` | 
+
+
 
 Please note that the driver will open a local port and forward it to the server. It will inject the local host and port into your original 
 JDBC URL when it sees the text `{{host}}` and `{{port}}`, respectively.

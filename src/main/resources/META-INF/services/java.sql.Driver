@@ -1,1 +1,2 @@
 com.cekrlic.jdbc.ssh.tunnel.SshJDriver
+com.cekrlic.jdbc.ssh.tunnel.SshJNativeDriver

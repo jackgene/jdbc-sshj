@@ -32,9 +32,9 @@ public class H2SshJDriverTest extends JdbcSshDriverTest {
 		String port = db2Url.substring(portIdx + 1);
 
 
-		sshUrl = System.getProperty("url") != null ? System.getProperty("url") :
-				"jdbc:sshj://" + SshdServerSetupTest.sshHost + ":" + SshdServerSetupTest.sshPort + "?remote=" + srv + ":" + port + "&username=test&password=test&verify_hosts=off;;;jdbc:h2:{{host}}:{{port}}/test";
-		realUrl = System.getProperty("realUrl") != null ? System.getProperty("realUrl") : "jdbc:h2:" + db2Url + "/test";
+		sshUrl = "jdbc:sshj://" + SshdServerSetupTest.sshHost + ":" + SshdServerSetupTest.sshPort + "?remote=" + srv + ":" + port + "&username=test&password=test&verify_hosts=off;;;jdbc:h2:{{host}}:{{port}}/test";
+		sshNativeUrl = "jdbc:sshj-native://" + SshdServerSetupTest.sshHost + " -o StrictHostKeyChecking=no -p " + SshdServerSetupTest.sshPort + "?remote=" + srv + ":" + port + "&username=test&password=test&verify_hosts=off;;;jdbc:h2:{{host}}:{{port}}/test";
+		realUrl = "jdbc:h2:" + db2Url + "/test";
 
 		sql = "SELECT 1";
 	}

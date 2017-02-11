@@ -60,6 +60,7 @@ public class DerbySshJDriverTest extends JdbcSshDriverTest {
 
 	public void setUp() throws Exception {
 		sshUrl = System.getProperty("url") != null ? System.getProperty("url") : "jdbc:sshj://" + SshdServerSetupTest.sshHost + ":" + SshdServerSetupTest.sshPort + "?remote=127.0.0.1:1527&username=test&password=test&verify_hosts=off;;;jdbc:derby://{{host}}:{{port}}/target/test;create=true";
+		sshNativeUrl = System.getProperty("url") != null ? System.getProperty("url") : "jdbc:sshj-native://" + SshdServerSetupTest.sshHost + " -o StrictHostKeyChecking=no -p " + SshdServerSetupTest.sshPort + "?remote=127.0.0.1:1527&username=test&password=test&verify_hosts=off;;;jdbc:derby://{{host}}:{{port}}/target/test;create=true";
 		realUrl = System.getProperty("realUrl") != null ? System.getProperty("realUrl") : "jdbc:derby://127.0.0.1:1527/target/test;create=true";
 
 		sql = "SELECT 1 FROM SYSIBM.SYSDUMMY1";
