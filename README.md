@@ -45,6 +45,7 @@ jdbc:sshj://<host>[:<port>]
 | *private.key.file* | Path to the file with a private key. | `~/.ssh/id_rsa` |
 | *private.key.password* | Password for the private key, if any. | `demo1234` |
 | *private.key.file.format* | File format. Putty private key files and OpenSSH files are accepted. By default it tries to load OPENSSH format. | `PUTTY` | 
+| *drivers* | Comma separated list of drivers (class files) to preload. | `org.postgresql.Driver` | 
 | *verify_hosts* | Supress host verification. Driver will not complain on new/unknown hosts. | `off` | 
 
 Please note that the driver will open a local port and forward it to the server. It will inject the local host and port into your original 

@@ -32,6 +32,7 @@ public class SshTunnel {
 	static final String PRIVATE_KEY_FILE_FORMAT = "private.key.file.format";
 	static final String VERIFY_HOSTS = "verify_hosts";
 	static final String REMOTE = "remote";
+	static final String DRIVERS = "drivers";
 
 	private final URI sshUrl;
 	private final Map<String, String> queryParameters;
@@ -69,6 +70,18 @@ public class SshTunnel {
 			this.port = this.sshUrl.getPort();
 		} catch (UnsupportedEncodingException | URISyntaxException e) {
 			throw new SQLException(e);
+		}
+
+		if(queryParameters.containsKey(DRIVERS)) {
+			final String[] drivers =  queryParameters.get(DRIVERS).split(",");
+			for(final String driver: drivers) {
+				try {
+					Class.forName(driver);
+					logger.debug("Loaded JDBC driver: {}", driver);
+				} catch (ClassNotFoundException e) {
+					logger.warn("Failed loading class " + driver + "! Skipping class.", e);
+				}
+			}
 		}
 
 		logger.info("Automatic local port assignment starts at: {}:{}", localHost, localPort.get());
