@@ -14,8 +14,6 @@ public class SshJDriver extends AbstractSshJDriver {
 	private static final int VERSION_MAJOR = 1;
 	private static final int VERSION_MINOR = 0;
 
-	private AbstractTunnel tunnel;
-
 	public SshJDriver() throws SQLException {
 		log.trace("SSHJDriver initialized");
 	}

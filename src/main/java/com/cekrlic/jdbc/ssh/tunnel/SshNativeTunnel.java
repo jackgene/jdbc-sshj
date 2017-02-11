@@ -99,6 +99,7 @@ public class SshNativeTunnel extends AbstractTunnel {
 						}
 
 						if(LOGIN_MESSAGE.equals(line)) {
+							logger.info("Log in successful!");
 							synchronized (mutex) {
 								started = true;
 								ioe = null;

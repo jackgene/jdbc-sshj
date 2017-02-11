@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 public abstract class AbstractSshJDriver implements Driver {
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(AbstractSshJDriver.class);
 
+	protected AbstractTunnel tunnel;
+
 	abstract String getDriverPrefix();
 
 	@Override
@@ -49,7 +51,7 @@ public abstract class AbstractSshJDriver implements Driver {
 		originalUrl = originalUrl.replaceAll("\\{\\{[hH][oO][sS][tT]\\}\\}", newHost);
 		originalUrl = originalUrl.replaceAll("\\{\\{[pP][oO][rR][tT]\\}\\}", newPort);
 
-		log.info("Proxying connection to: {}", originalUrl);
+		log.info("Proxying connection {}:{}: {}",  tunnel.getLocalHost(), tunnel.getLocalPort(), originalUrl);
 		Driver driver = findDriver(originalUrl);
 		return driver.connect(originalUrl, info);
 	}
