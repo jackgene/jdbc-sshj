@@ -22,6 +22,7 @@ public class SshNativeTunnel extends AbstractTunnel {
 	private Thread runnable;
 	private IOException ioe = null;
 	private boolean started = false;
+	private boolean stopped = false;
 	private final Object mutex = new Object();
 
 
@@ -40,20 +41,12 @@ public class SshNativeTunnel extends AbstractTunnel {
 		loadDrivers(queryParameters);
 		logger.info("Automatic local port assignment starts at: {}:{}", localHost, localPort.get());
 
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				logger.info("Shutting down tunnel {}:{} for ", localHost, localPort.get(), arguments);
-				SshNativeTunnel.this.stop();
-			}
-		});
 	}
 
 	@Override
 	public void start() throws SQLException {
 		determineLocalPort();
-		int localPort = this.localPort.get();
+		final int localPort = this.localPort.get();
 
 		List<String> commandList = new ArrayList<>();
 		commandList.add("ssh");
@@ -69,7 +62,22 @@ public class SshNativeTunnel extends AbstractTunnel {
 		commandList.add("echo \"" + LOGIN_MESSAGE + "\"; ping -i 10 127.0.0.1");
 
 		final ProcessBuilder pb = new ProcessBuilder(commandList);
+		final Map<String, String> environment = pb.environment();
+
+		// Attach locale-specific variables to environment, if found in System.properties
+		// This is basically needed to make our test cases work, as Apache's SSHD implementation
+		// ignores opcode 42 (IUTF8) and stops further processing. Hence we switch back to
+		// ISO-8895-1 in our tests.
+		@SuppressWarnings("unchecked")
+		final Map<String, String> properties = (Map) System.getProperties();
+		for(final Map.Entry<String, String> e: properties.entrySet()) {
+			if(e.getKey().startsWith("LC_") || e.getKey().startsWith("LANG")) {
+				environment.put(e.getKey(), e.getValue());
+			}
+		}
+
 		logger.info("Executing: {}", pb.command());
+		logger.debug("Environment: {}", environment);
 
 		final boolean debug = logger.isDebugEnabled();
 
@@ -77,7 +85,8 @@ public class SshNativeTunnel extends AbstractTunnel {
 			@Override
 			public void run() {
 				started = false;
-				Process p;
+				stopped = false;
+				final Process p;
 				try {
 					p = pb.start();
 				} catch (IOException e) {
@@ -87,9 +96,35 @@ public class SshNativeTunnel extends AbstractTunnel {
 					}
 					return;
 				}
-				InputStream is = p.getInputStream();
-				Reader r = new InputStreamReader(is);
-				BufferedReader br = new BufferedReader(r);
+
+				final Thread errorStream = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						final InputStream is = p.getErrorStream();
+						final Reader r = new InputStreamReader(is);
+						final BufferedReader br = new BufferedReader(r);
+						String line;
+						try {
+							line = br.readLine();
+							while(line != null) {
+								logger.error(line);
+								if(Thread.currentThread().isInterrupted()) {
+									break;
+								}
+								line = br.readLine();
+							}
+						} catch (IOException ioe) {
+							logger.error("Could not read error stream!", ioe);
+						}
+					}
+				});
+				errorStream.setPriority(Thread.MIN_PRIORITY);
+				errorStream.setDaemon(true);
+				errorStream.start();
+
+				final InputStream is = p.getInputStream();
+				final Reader r = new InputStreamReader(is);
+				final BufferedReader br = new BufferedReader(r);
 				String line;
 				try {
 					line = br.readLine();
@@ -106,9 +141,11 @@ public class SshNativeTunnel extends AbstractTunnel {
 							}
 						}
 						if(Thread.currentThread().isInterrupted()) {
+							errorStream.interrupt();
 							p.destroy();
 							synchronized (mutex) {
 								started = false;
+								stopped = true;
 								mutex.notify();
 							}
 						}
@@ -117,6 +154,7 @@ public class SshNativeTunnel extends AbstractTunnel {
 				} catch (IOException e) {
 					synchronized (mutex) {
 						started = false;
+						stopped = true;
 						ioe = e;
 						p.destroy();
 						mutex.notify();
@@ -125,33 +163,52 @@ public class SshNativeTunnel extends AbstractTunnel {
 
 			}
 		});
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				SshNativeTunnel.this.stop("Shutdown hook.");
+			}
+		});
+
 		runnable.setPriority(Thread.MIN_PRIORITY);
 		runnable.setDaemon(true);
 		runnable.start();
 
-		if(ioe!=null) {
-			throw new SQLException(ioe);
-		}
+		ensureStarted();
+	}
 
-		if(started) {
-			return;
-		}
-
+	public void ensureStarted() throws SQLException {
 		try {
-			synchronized (mutex) {
-				mutex.wait(10000);
+			while(!started || stopped || ioe != null) {
+				synchronized (mutex) {
+					mutex.wait(1000);
+				}
 			}
 		} catch (InterruptedException e) {
 			throw new SQLException(e);
 		}
 
+		if(ioe!=null) {
+			throw new SQLException(ioe);
+		}
+
+		if(stopped) {
+			throw new SQLException("Service is stopped.");
+		}
 	}
 
 	@Override
-	public void stop() {
+	boolean isStopped() {
+		return stopped;
+	}
+
+	@Override
+	public void stop(String reason) {
 		if(runnable!=null) {
 			runnable.interrupt();
 			runnable = null;
+			logger.info("Shutting down tunnel {}:{} due to: {}", localHost, localPort, reason);
 		}
 	}
 }

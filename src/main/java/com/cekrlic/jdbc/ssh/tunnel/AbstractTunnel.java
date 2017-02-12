@@ -24,6 +24,7 @@ public abstract class AbstractTunnel {
 	public static final String REMOTE = "remote";
 	public static final String DRIVERS = "drivers";
 
+	protected AtomicInteger connectionCount = new AtomicInteger(0);
 	protected AtomicInteger localPort = new AtomicInteger(20000 + new java.util.Random().nextInt(100));
 	protected String localHost;
 
@@ -132,5 +133,19 @@ public abstract class AbstractTunnel {
 	/**
 	 * Stop the tunnel
 	 */
-	abstract void stop();
+	abstract void stop(String reason);
+
+	abstract void ensureStarted() throws SQLException;
+
+	abstract boolean isStopped();
+
+	public void remove(SshConnection sshConnection) {
+		if(connectionCount.decrementAndGet()==0) {
+			this.stop("No connections remaining open.");
+		}
+	}
+
+	public void add(SshConnection sshConnection) {
+		connectionCount.incrementAndGet();
+	}
 }

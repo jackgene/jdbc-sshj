@@ -2,9 +2,8 @@ package com.cekrlic.jdbc.ssh.tunnel;
 
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class SshJDriver extends AbstractSshJDriver {
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(SshJDriver.class);
@@ -33,21 +32,6 @@ public class SshJDriver extends AbstractSshJDriver {
 	}
 
 	@Override
-	public Connection connect(String url, Properties info) throws SQLException {
-		ConnectionData d = verifyConnection(url);
-		// Not our connection URL, skip further integration
-		if(d == null) {
-			return null;
-		}
-
-		// SshTunnel will also load 3rd-party driver, if needed.
-		tunnel = new SshTunnel(d.getOurUrl());
-		tunnel.start();
-
-		return getRealConnection(info, d.getForwardingUrl(), tunnel.getLocalHost(), tunnel.getLocalPort());
-	}
-
-	@Override
 	public int getMajorVersion() {
 		return VERSION_MAJOR;
 	}
@@ -56,5 +40,13 @@ public class SshJDriver extends AbstractSshJDriver {
 	public int getMinorVersion() {
 		return VERSION_MINOR;
 	}
+
+	protected AbstractTunnel newTunnel(ConnectionData d) throws IOException, SQLException {
+		SshTunnel n = new SshTunnel(d.getOurUrl());
+		// SshTunnel will also load 3rd-party driver, if needed.
+		n.start();
+		return n;
+	}
+
 
 }

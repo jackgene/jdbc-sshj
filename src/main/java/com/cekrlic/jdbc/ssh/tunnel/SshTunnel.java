@@ -83,13 +83,6 @@ public class SshTunnel extends AbstractTunnel {
 		loadDrivers(queryParameters);
 		logger.info("Automatic local port assignment starts at: {}:{}", localHost, localPort.get());
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				logger.info("Shutting down tunnel {}:{} to {}:{}", localHost, localPort.get(), host, port);
-				SshTunnel.this.stop();
-			}
-		});
 	}
 
 
@@ -109,6 +102,13 @@ public class SshTunnel extends AbstractTunnel {
 					client.addHostKeyVerifier(new PromiscuousVerifier());
 				}
 			}
+
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					SshTunnel.this.stop("Shutdown hook.");
+				}
+			});
 
 			if (this.port > 0) {
 				try {
@@ -247,22 +247,31 @@ public class SshTunnel extends AbstractTunnel {
 			synchronized (mutex) {
 				mutex.wait(1000);
 			}
-			if(ioe != null) {
-				throw ioe;
-			}
 
-			logger.info("Listening for remote connections.");
-
+			ensureStarted();
 		} catch (Exception e) {
 			logger.error(e.toString(), e);
 			throw new SQLException(e);
 		}
 	}
 
-	public void stop() {
+	public void ensureStarted() throws SQLException {
+		if(ioe != null) {
+			throw new SQLException(ioe);
+		}
+	}
+
+	@Override
+	boolean isStopped() {
+		return runnable == null || ss == null || client == null;
+	}
+
+	@Override
+	public void stop(String reason) {
 		if(runnable != null) {
 			runnable.interrupt();
 			runnable = null;
+			logger.info("Shutting down tunnel {}:{} to {}:{} due to {}", localHost, localPort.get(), host, port, reason);
 		}
 
 		if(ss != null) {
@@ -278,14 +287,13 @@ public class SshTunnel extends AbstractTunnel {
 		if (client != null) {
 			try {
 				client.disconnect();
-
-				if (logger.isDebugEnabled()) {
-					logger.debug("Disconnected.");
-				}
-			} catch (IOException e) {
-				logger.error("Failed to disconnect from " + this.host);
+			} catch (Exception e) {
+				// Ignore any errors while disconnecting
 			} finally {
-				ss = null;
+				client = null;
+			}
+			if (logger.isDebugEnabled()) {
+				logger.debug("Disconnected.");
 			}
 		}
 	}

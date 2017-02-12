@@ -136,6 +136,4 @@ Download artifacts directly from CircleCI: https://circleci.com/gh/bokysan/jdbc-
 
 ## TODO
 
-- Make better use of connection pooling. If the system tries to open the same connection towards the same server, this implementation will reestablish
-another connection. 
-- SSH connection should be persistent and kept alive only until until the last connection is closed. Currently their livespan is connected to the life of JVM. 
+- Discover why Derby test for SSH native connection is failing.
