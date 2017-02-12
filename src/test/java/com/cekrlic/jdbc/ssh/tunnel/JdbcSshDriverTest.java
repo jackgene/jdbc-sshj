@@ -239,11 +239,11 @@ public class JdbcSshDriverTest {
 				// Derby
 				{DERBY_SQL, "jdbc:derby://127.0.0.1:" + DERBY_PORT + "/target/test;create=true"}, // Direct
 				// Can't figure out why this won't work. H2 connects successfuly, but this ends up with "Error connecting to server 127.0.0.1 on port 20,081 with message Connection refused."
-				// {DERBY_SQL, "jdbc:sshj-native://" + sshHost + " -o StrictHostKeyChecking=no -p " + sshPort + "?remote=127.0.0.1:" + DERBY_PORT + ";;;jdbc:derby://{{host}}:{{port}}/target/test;create=true"}, // Native
+				// {DERBY_SQL, "jdbc:sshj-native://" + sshHost + " -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p " + sshPort + "?remote=127.0.0.1:" + DERBY_PORT + ";;;jdbc:derby://{{host}}:{{port}}/target/test;create=true"}, // Native
 				{DERBY_SQL, "jdbc:sshj://" + sshHost + ":" + sshPort + "?remote=127.0.0.1:" + DERBY_PORT + "&username=test&password=test&verify_hosts=off;;;jdbc:derby://{{host}}:{{port}}/target/test;create=true"}, // SSHJ
 				// H2
 				{H2_SQL, "jdbc:h2:" + db2Url + "/test"}, // Direct
-				{H2_SQL, "jdbc:sshj-native://" + sshHost + " -o StrictHostKeyChecking=no -p " + sshPort + "?remote=" + srv + ":" + port + ";;;jdbc:h2:{{host}}:{{port}}/test"}, // Native
+				{H2_SQL, "jdbc:sshj-native://" + sshHost + " -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p " + sshPort + "?remote=" + srv + ":" + port + ";;;jdbc:h2:{{host}}:{{port}}/test"}, // Native
 				{H2_SQL, "jdbc:sshj://" + sshHost + ":" + sshPort + "?remote=" + srv + ":" + port + "&username=test&password=test&verify_hosts=off;;;jdbc:h2:{{host}}:{{port}}/test"}, // SSHJ
 		};
 	}

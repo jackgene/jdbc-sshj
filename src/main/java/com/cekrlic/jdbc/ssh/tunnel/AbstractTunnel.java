@@ -3,6 +3,7 @@ package com.cekrlic.jdbc.ssh.tunnel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -25,7 +26,7 @@ public abstract class AbstractTunnel {
 	public static final String DRIVERS = "drivers";
 
 	protected AtomicInteger connectionCount = new AtomicInteger(0);
-	protected AtomicInteger localPort = new AtomicInteger(20000 + new java.util.Random().nextInt(100));
+	protected AtomicInteger localPort = new AtomicInteger(20000 + new java.util.Random().nextInt(500));
 	protected String localHost;
 
 	public AbstractTunnel() {
@@ -34,6 +35,7 @@ public abstract class AbstractTunnel {
 
 	/**
 	 * Retrieve the local port at which the SSH tunnel is listening.
+	 *
 	 * @return The local port, e.g. 22014.
 	 */
 	public String getLocalPort() {
@@ -43,6 +45,7 @@ public abstract class AbstractTunnel {
 
 	/**
 	 * Retrieve the local IP at which the SSH tunnel is listening.
+	 *
 	 * @return The local IP, e.g. 127.0.2.214.
 	 */
 	public String getLocalHost() {
@@ -53,7 +56,7 @@ public abstract class AbstractTunnel {
 		String localHost;
 		// Determine if it's mac:
 		String os = System.getProperty("os.name").toUpperCase();
-		if(os.contains("OS X") || os.contains("MACOS") || os.contains("MAC ") || System.getProperty("CIRCLE_TEST_REPORTS")!=null) {
+		if (os.contains("OS X") || os.contains("MACOS") || os.contains("MAC ") || System.getProperty("CIRCLE_TEST_REPORTS") != null) {
 			localHost = "127.0.0.1";
 		} else {
 			localHost = "127.0.1." + (2 + new java.util.Random().nextInt(201));
@@ -84,13 +87,13 @@ public abstract class AbstractTunnel {
 
 	protected static void loadDrivers(Map<String, String> queryParameters) {
 		String drv = queryParameters.get(DRIVERS);
-		if(drv == null) {
+		if (drv == null) {
 			// Convenience method for people such as me that don't read the documentation thorougly
 			drv = queryParameters.get("driver");
 		}
-		if(drv!=null && drv.length() > 0) {
-			final String[] drivers =  drv.split(",");
-			for(final String driver: drivers) {
+		if (drv != null && drv.length() > 0) {
+			final String[] drivers = drv.split(",");
+			for (final String driver : drivers) {
 				try {
 					Class.forName(driver);
 					log.debug("Loaded JDBC driver: {}", driver);
@@ -106,12 +109,16 @@ public abstract class AbstractTunnel {
 	 */
 	abstract void start() throws SQLException;
 
+	public boolean isListening() {
+		return isPortOpen(localHost, localPort.get());
+	}
+
 	protected void determineLocalPort() {
 		int nextPort = localPort.incrementAndGet();
 
 		// NOTE: scan max next 10 ports
 		for (int i = 0; i < 10; i++) {
-			if (isPortOpen(localHost, nextPort)) {
+			if (!isPortOpen(localHost, nextPort)) {
 				break;
 			}
 
@@ -119,20 +126,26 @@ public abstract class AbstractTunnel {
 		}
 	}
 
-	private static boolean isPortOpen(String ip, int port) {
+	protected static boolean isPortOpen(String ip, int port) {
+		Socket socket = new Socket();
 		try {
-			Socket socket = new Socket();
 			socket.connect(new InetSocketAddress(ip, port), 1000);
-			socket.close();
-			return false;
-		} catch (Exception ex) {
 			return true;
+		} catch (Exception ex) {
+			return false;
+		} finally {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				// Ignore
+			}
 		}
 	}
 
 	/**
 	 * Stop the tunnel
 	 */
+
 	abstract void stop(String reason);
 
 	abstract void ensureStarted() throws SQLException;
@@ -140,7 +153,7 @@ public abstract class AbstractTunnel {
 	abstract boolean isStopped();
 
 	public void remove(SshConnection sshConnection) {
-		if(connectionCount.decrementAndGet()==0) {
+		if (connectionCount.decrementAndGet() == 0) {
 			this.stop("No connections remaining open.");
 		}
 	}

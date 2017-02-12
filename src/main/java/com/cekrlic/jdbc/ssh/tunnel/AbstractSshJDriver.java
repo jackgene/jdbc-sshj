@@ -50,7 +50,6 @@ public abstract class AbstractSshJDriver implements Driver {
 		originalUrl = originalUrl.replaceAll("\\{\\{[hH][oO][sS][tT]\\}\\}", newHost);
 		originalUrl = originalUrl.replaceAll("\\{\\{[pP][oO][rR][tT]\\}\\}", newPort);
 
-		log.info("Proxying connection {}:{}: {}",  tunnel.getLocalHost(), tunnel.getLocalPort(), originalUrl);
 		Driver driver = findDriver(originalUrl);
 		return driver.connect(originalUrl, info);
 	}
@@ -130,7 +129,8 @@ public abstract class AbstractSshJDriver implements Driver {
 			} else {
 				synchronized (a) {
 					tunnel = a.get();
-					if(tunnel.isStopped()) {
+					tunnel.ensureStarted();
+					if(tunnel.isStopped() || !tunnel.isListening()) {
 						tunnel = newTunnel(d);
 						log.info("Tunnel stopped for {}, created a new tunnel: {}", url, tunnel);
 						a.set(tunnel);

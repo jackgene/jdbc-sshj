@@ -76,9 +76,7 @@ public class SshNativeTunnel extends AbstractTunnel {
 			}
 		}
 
-		logger.info("Executing: {}", pb.command());
-		logger.debug("Environment: {}", environment);
-
+		logger.debug("Executing: {}", listToString(pb.command()));
 		final boolean debug = logger.isDebugEnabled();
 
 		runnable = new Thread(new Runnable() {
@@ -107,7 +105,7 @@ public class SshNativeTunnel extends AbstractTunnel {
 						try {
 							line = br.readLine();
 							while(line != null) {
-								logger.error(line);
+								logger.warn(line);
 								if(Thread.currentThread().isInterrupted()) {
 									break;
 								}
@@ -134,6 +132,21 @@ public class SshNativeTunnel extends AbstractTunnel {
 						}
 
 						if(LOGIN_MESSAGE.equals(line)) {
+							logger.debug("Detected login message.");
+
+							int wait = 50;
+							while((wait--)>0 && !isPortOpen(localHost, localPort)) {
+								try {
+									Thread.sleep(100);
+								} catch (InterruptedException e) {
+									throw new IOException("Waiting interrupted; probably shutting down...", e);
+								}
+							}
+
+							if(wait<=0) {
+								throw new IOException("Failed to set up port forwarding!");
+							}
+
 							synchronized (mutex) {
 								started = true;
 								ioe = null;
@@ -176,13 +189,31 @@ public class SshNativeTunnel extends AbstractTunnel {
 		runnable.start();
 
 		ensureStarted();
+		logger.debug("Connection to {}:{} opened.");
+	}
+
+	private static String listToString(List<String> command) {
+		final StringBuilder sb = new StringBuilder();
+		for(final String p: command) {
+			if(sb.length() > 0) {
+				sb.append(" ");
+			}
+			if(p.contains(" ")) {
+				sb.append("'");
+				sb.append(p.replaceAll("'", "\\'"));
+				sb.append("'");
+			} else {
+				sb.append(p);
+			}
+		}
+		return sb.toString();
 	}
 
 	public void ensureStarted() throws SQLException {
 		try {
 			while(!started || stopped || ioe != null) {
 				synchronized (mutex) {
-					mutex.wait(1000);
+					mutex.wait(100);
 				}
 			}
 		} catch (InterruptedException e) {
@@ -195,6 +226,11 @@ public class SshNativeTunnel extends AbstractTunnel {
 
 		if(stopped) {
 			throw new SQLException("Service is stopped.");
+		}
+
+		if(!started) {
+			stopped = true;
+			throw new SQLException("Service failed to start successfully.");
 		}
 	}
 

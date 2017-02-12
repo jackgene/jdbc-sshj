@@ -259,6 +259,20 @@ public class SshTunnel extends AbstractTunnel {
 		if(ioe != null) {
 			throw new SQLException(ioe);
 		}
+		int wait = 50;
+		while((wait--)>0 && !isPortOpen(localHost, localPort.get())) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				throw new SQLException("Waiting interrupted; probably shutting down...", e);
+			}
+		}
+
+		if(wait <=0) {
+			throw new SQLException("Port forwarding was not successful!");
+		}
+
+
 	}
 
 	@Override
