@@ -26,7 +26,7 @@ checkstyle {
 }
 
 dependencies {
-    implementation("com.hierynomus", "sshj", "0.19.0")
+    implementation("com.hierynomus", "sshj", "0.31.0")
     implementation("org.slf4j", "slf4j-api", "1.7.12")
     testImplementation("ch.qos.logback", "logback-classic", "1.1.3")
     testImplementation("mysql", "mysql-connector-java", "5.1.34")

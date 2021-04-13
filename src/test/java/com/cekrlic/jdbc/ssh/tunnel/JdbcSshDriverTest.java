@@ -78,7 +78,7 @@ public class JdbcSshDriverTest {
       final CommandFactory commandFactory = new CommandFactory();
       final Properties p = new Properties();
       p.load(SshJDriver.class.getClassLoader().getResourceAsStream("ssh.properties"));
-      sshPort = Integer.valueOf(p.getProperty("jdbc.ssh.port"));
+      sshPort = Integer.parseInt(p.getProperty("jdbc.ssh.port"));
       sshHost = p.getProperty("jdbc.ssh.host");
 
       sshd = SshServer.setUpDefaultServer();
@@ -165,7 +165,7 @@ public class JdbcSshDriverTest {
         dbServerH2.getStatus(), dbServerH2.isRunning(true));
   }
 
-  private void shutdownH2() throws Exception {
+  private void shutdownH2() {
     logger.info("*** Shutting down H2 from Test.");
     dbServerH2.shutdown();
   }
