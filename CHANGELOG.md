@@ -1,3 +1,8 @@
+1.0.11
+- bump up version of dependencies
+    - SSHJ 0.31.0
+    - SLF4J 1.7.30
+
 1.0.10
 
 - bug fix: avoid wrong local port increment (@emac)

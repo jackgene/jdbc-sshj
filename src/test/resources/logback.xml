@@ -1,16 +1,21 @@
 <configuration scan="true" scanPeriod="5 seconds">
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %boldYellow(%logger{36}) - %msg%n</pattern>
-        </encoder>
-    </appender>
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %boldYellow(%logger{36}) - %msg%n
+      </pattern>
+    </encoder>
+    <withJansi>true</withJansi>
+  </appender>
 
-    <logger name="com.m11n.jdbc" level="DEBUG" />
-    <logger name="org.apache.sshd" level="DEBUG" />
+  <logger level="DEBUG" name="com.cekrlic.jdbc"/>
+  <logger level="ERROR" name="org.apache.sshd"/>
+  <logger level="OFF" name="net.schmizz.sshj.common.StreamCopier"/>
+  <logger level="OFF" name="net.schmizz.sshj.transport.TransportImpl"/>
+  <logger level="OFF" name="net.schmizz.concurrent.Promise"/>
+  <logger level="OFF" name="net.schmizz.sshj.transport.verification.OpenSSHKnownHosts"/>
 
-    <root level="ERROR">
-        <appender-ref ref="STDOUT" />
-    </root>
+  <root level="ERROR">
+    <appender-ref ref="STDOUT"/>
+  </root>
 </configuration>
