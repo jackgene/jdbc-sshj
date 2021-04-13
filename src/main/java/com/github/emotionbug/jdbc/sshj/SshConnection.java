@@ -1,4 +1,4 @@
-package com.cekrlic.jdbc.ssh.tunnel;
+package com.github.emotionbug.jdbc.sshj;
 
 import java.sql.Array;
 import java.sql.Blob;

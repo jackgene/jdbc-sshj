@@ -1,4 +1,4 @@
-package com.cekrlic.jdbc.ssh.tunnel;
+package com.github.emotionbug.jdbc.sshj;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

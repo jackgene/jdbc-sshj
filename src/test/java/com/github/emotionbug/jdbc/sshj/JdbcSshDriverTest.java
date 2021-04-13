@@ -1,6 +1,5 @@
-package com.cekrlic.jdbc.ssh.tunnel;
+package com.github.emotionbug.jdbc.sshj;
 
-import static com.cekrlic.jdbc.ssh.tunnel.SshNativeTunnel.LOGIN_MESSAGE;
 import static org.testng.Assert.assertTrue;
 
 import com.m11n.jdbc.ssh.util.BogusPasswordAuthenticator;
@@ -267,7 +266,7 @@ public class JdbcSshDriverTest {
     @Override
     public void start(ChannelSession channel, Environment env) throws IOException {
       logger.debug("Executing command: {}", command);
-      out.write((LOGIN_MESSAGE + "\r\n").getBytes());
+      out.write((SshNativeTunnel.LOGIN_MESSAGE + "\r\n").getBytes());
       out.flush();
     }
 

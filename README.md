@@ -1,7 +1,5 @@
 # jdbc-sshj
 
-[![Build status](https://circleci.com/gh/bokysan/jdbc-sshj.svg?style=shield&circle-token=0d4d10946e3f339feb4c44fd72d85087936ff4db)](https://circleci.com/gh/bokysan/jdbc-sshj)
-
 A JDBC Driver Wrapper which connects over SSH to the target database. Please note that only one port
 is fowarded, so forget about connecting to Oracle on Windows.
 
@@ -49,7 +47,7 @@ jdbc:sshj://[user@]<host>[:<port>]
 | Parameter | Description | Example |                                                                       
 | --- | --- | --- |                         
 | *jdbc:sshj://<host>[:<port>]* | The *host* and *
-port* of the remote SSH server. Port is optional. | `jdbc:sshj://demo.example.org` | 
+port* of the remote SSH server. Port is optional. | `jdbc:sshj://demo.example.org` |
 | *remote* | The *host* and *port* of the database on the remote server. | `10.11.12.13:5432` |
 | *
 username* | The SSH username. Alternatively, specify it before the `@` sign in the host name | `demo` |
@@ -81,7 +79,7 @@ jdbc:sshj-native://<any-parameters-which-you-might-send-to-ssh>
 any-parameters-which-you-might-send-to-ssh* | Anything you type here is going to be echoed directly to the SSH command | `-c demo@demo.example.org -r` | 
 | *
 keepalive.command* | Command to run on the remote server to keep the session alive. If not set, your session *
-might* timeout. | `ping localhost` | 
+might* timeout. | `ping localhost` |
 
 Please note that the driver will open a local port and forward it to the server. It will inject the
 local host and port into your original JDBC URL when it sees the text `{{host}}` and `{{port}}`,
@@ -135,16 +133,21 @@ mvn clean install
 You can setup your Maven dependencies like this:
 
 ```xml
+
 <dependency>
-    <groupId>com.cekrlic</groupId>
-    <artifactId>jdbc-sshj</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+  <groupId>com.cekrlic</groupId>
+  <artifactId>jdbc-sshj</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
-## Download
+## Copyright
 
-Download artifacts directly from CircleCI: https://circleci.com/gh/bokysan/jdbc-sshj
+This project cloned on below repositories.
+
+https://github.com/bokysan/jdbc-sshj
+
+https://github.com/monkeysintown/jdbc-ssh
 
 ## TODO
 
