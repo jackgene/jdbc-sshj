@@ -11,3 +11,5 @@ build.sh
 release.sh
 trace.db
 derby.log
+/.gradle/
+/build/
