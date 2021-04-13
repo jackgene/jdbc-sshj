@@ -1,4 +1,4 @@
-package com.cekrlic.jdbc.ssh.tunnel;
+package com.github.emotionbug.jdbc.sshj;
 
 import java.io.File;
 import java.io.FileNotFoundException;

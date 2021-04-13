@@ -1,2 +1,2 @@
-com.cekrlic.jdbc.ssh.tunnel.SshJDriver
-com.cekrlic.jdbc.ssh.tunnel.SshJNativeDriver
+com.github.emotionbug.jdbc.sshj.SshJDriver
+com.github.emotionbug.jdbc.sshj.SshJNativeDriver

@@ -1,4 +1,4 @@
-package com.cekrlic.jdbc.ssh.tunnel;
+package com.github.emotionbug.jdbc.sshj;
 
 import net.schmizz.sshj.userauth.password.PasswordFinder;
 import net.schmizz.sshj.userauth.password.Resource;
