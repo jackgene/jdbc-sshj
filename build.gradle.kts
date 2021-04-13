@@ -5,6 +5,7 @@
 plugins {
     java
     `maven-publish`
+    checkstyle
 }
 
 repositories {
@@ -18,19 +19,25 @@ repositories {
     }
 }
 
+checkstyle {
+    toolVersion = "8.41.1"
+    configFile = file("config/checkstyle/google_checks.xml")
+    isIgnoreFailures = true
+}
+
 dependencies {
-    implementation("com.hierynomus:sshj:0.19.0")
-    implementation("org.slf4j:slf4j-api:1.7.12")
-    testImplementation("ch.qos.logback:logback-classic:1.1.3")
-    testImplementation("mysql:mysql-connector-java:5.1.34")
-    testImplementation("com.h2database:h2:1.4.183")
-    testImplementation("org.apache.derby:derby:10.11.1.1")
-    testImplementation("org.apache.derby:derbynet:10.11.1.1")
-    testImplementation("org.apache.derby:derbyclient:10.11.1.1")
-    testImplementation("org.apache.sshd:sshd-core:0.14.0")
-    testImplementation("org.bouncycastle:bcpg-jdk15on:1.52")
-    testImplementation("org.bouncycastle:bcpkix-jdk15on:1.52")
-    testImplementation("org.testng:testng:6.10")
+    implementation("com.hierynomus", "sshj", "0.19.0")
+    implementation("org.slf4j", "slf4j-api", "1.7.12")
+    testImplementation("ch.qos.logback", "logback-classic", "1.1.3")
+    testImplementation("mysql", "mysql-connector-java", "5.1.34")
+    testImplementation("com.h2database", "h2", "1.4.183")
+    testImplementation("org.apache.derby", "derby", "10.11.1.1")
+    testImplementation("org.apache.derby", "derbynet", "10.11.1.1")
+    testImplementation("org.apache.derby", "derbyclient", "10.11.1.1")
+    testImplementation("org.apache.sshd", "sshd-core", "0.14.0")
+    testImplementation("org.bouncycastle", "bcpg-jdk15on", "1.52")
+    testImplementation("org.bouncycastle", "bcpkix-jdk15on", "1.52")
+    testImplementation("org.testng", "testng", "6.10")
 }
 
 group = "com.cekrlic"

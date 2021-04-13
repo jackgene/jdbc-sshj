@@ -8,19 +8,20 @@ import net.schmizz.sshj.userauth.password.Resource;
  * @created 08/02/2017 15:01
  */
 public class PlainPasswordFinder implements PasswordFinder {
-	private final char[] password;
 
-	public PlainPasswordFinder(String password) {
-		this.password = password.toCharArray();
-	}
+  private final char[] password;
 
-	@Override
-	public char[] reqPassword(Resource<?> resource) {
-		return password;
-	}
+  public PlainPasswordFinder(String password) {
+    this.password = password.toCharArray();
+  }
 
-	@Override
-	public boolean shouldRetry(Resource<?> resource) {
-		return false;
-	}
+  @Override
+  public char[] reqPassword(Resource<?> resource) {
+    return password;
+  }
+
+  @Override
+  public boolean shouldRetry(Resource<?> resource) {
+    return false;
+  }
 }
