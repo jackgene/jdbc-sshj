@@ -27,23 +27,23 @@ checkstyle {
 
 dependencies {
     implementation("com.hierynomus", "sshj", "0.31.0")
-    implementation("org.slf4j", "slf4j-api", "1.7.12")
-    testImplementation("ch.qos.logback", "logback-classic", "1.1.3")
-    testImplementation("mysql", "mysql-connector-java", "5.1.34")
-    testImplementation("com.h2database", "h2", "1.4.183")
-    testImplementation("org.apache.derby", "derby", "10.11.1.1")
-    testImplementation("org.apache.derby", "derbynet", "10.11.1.1")
-    testImplementation("org.apache.derby", "derbyclient", "10.11.1.1")
-    testImplementation("org.apache.sshd", "sshd-core", "0.14.0")
-    testImplementation("org.bouncycastle", "bcpg-jdk15on", "1.52")
-    testImplementation("org.bouncycastle", "bcpkix-jdk15on", "1.52")
-    testImplementation("org.testng", "testng", "6.10")
+    implementation("org.slf4j", "slf4j-api", "1.7.30")
+    testImplementation("ch.qos.logback", "logback-classic", "1.2.3")
+    testImplementation("mysql", "mysql-connector-java", "8.0.23")
+    testImplementation("com.h2database", "h2", "1.4.200")
+    testImplementation("org.apache.derby", "derby", "10.15.2.0")
+    testImplementation("org.apache.derby", "derbynet", "10.15.2.0")
+    testImplementation("org.apache.derby", "derbyclient", "10.15.2.0")
+    testImplementation("org.apache.sshd", "sshd-core", "2.6.0")
+    testImplementation("org.bouncycastle", "bcpg-jdk15on", "1.68")
+    testImplementation("org.bouncycastle", "bcpkix-jdk15on", "1.68")
+    testImplementation("org.testng", "testng", "7.4.0")
 }
 
 group = "com.cekrlic"
 version = "1.0.0-SNAPSHOT"
 description = "JDBC SSH"
-java.sourceCompatibility = JavaVersion.VERSION_1_7
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
     publications.create<MavenPublication>("maven") {
@@ -51,7 +51,7 @@ publishing {
     }
 }
 
-tasks.withType<JavaCompile>() {
+tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 

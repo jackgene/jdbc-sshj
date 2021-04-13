@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -21,14 +22,15 @@ import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Properties;
 import org.apache.derby.drda.NetworkServerControl;
-import org.apache.sshd.SshServer;
 import org.apache.sshd.common.Factory;
-import org.apache.sshd.common.ForwardingFilter;
-import org.apache.sshd.common.Session;
-import org.apache.sshd.common.SshdSocketAddress;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.common.session.Session;
+import org.apache.sshd.common.util.net.SshdSocketAddress;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
+import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.channel.ChannelSession;
+import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.forward.ForwardingFilter;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
@@ -82,20 +84,20 @@ public class JdbcSshDriverTest {
       sshHost = p.getProperty("jdbc.ssh.host");
 
       sshd = SshServer.setUpDefaultServer();
-      sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider("target/hostkey.rsa", "RSA"));
+      sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(Paths.get("target/hostkey.rsa")));
       sshd.setPasswordAuthenticator(new BogusPasswordAuthenticator());
       sshd.setPublickeyAuthenticator(new TestCachingPublicKeyAuthenticator());
       sshd.setCommandFactory(commandFactory);
       sshd.setHost(sshHost);
       sshd.setPort(sshPort);
-      sshd.setTcpipForwardingFilter(new ForwardingFilter() {
+      sshd.setForwardingFilter(new ForwardingFilter() {
         @Override
-        public boolean canForwardAgent(Session session) {
+        public boolean canForwardAgent(Session session, String requestType) {
           return true;
         }
 
         @Override
-        public boolean canForwardX11(Session session) {
+        public boolean canForwardX11(Session session, String requestType) {
           return true;
         }
 
@@ -105,7 +107,7 @@ public class JdbcSshDriverTest {
         }
 
         @Override
-        public boolean canConnect(SshdSocketAddress address, Session session) {
+        public boolean canConnect(Type type, SshdSocketAddress address, Session session) {
           return true;
         }
       });
@@ -160,7 +162,7 @@ public class JdbcSshDriverTest {
 
   private void startupH2() throws Exception {
     System.setProperty("h2.baseDir", "./target/h2");
-    dbServerH2 = Server.createTcpServer("-tcpPort", "8092", "-tcpDaemon").start();
+    dbServerH2 = Server.createTcpServer("-tcpPort", "8092", "-tcpDaemon", "-ifNotExists").start();
     logger.info("Database server status: u = {} - s = {} ({})", dbServerH2.getURL(),
         dbServerH2.getStatus(), dbServerH2.isRunning(true));
   }
@@ -238,46 +240,48 @@ public class JdbcSshDriverTest {
 
   private static class DemoCommand implements Command {
 
-    private String command;
-    private InputStream in;
+    private final String command;
     private OutputStream out;
-    private OutputStream err;
-    private ExitCallback callback;
 
     public DemoCommand(String command) {
       this.command = command;
     }
 
+    @Override
     public void setInputStream(InputStream in) {
-      this.in = in;
     }
 
+    @Override
     public void setOutputStream(OutputStream out) {
       this.out = out;
     }
 
+    @Override
     public void setErrorStream(OutputStream err) {
-      this.err = err;
     }
 
+    @Override
     public void setExitCallback(ExitCallback callback) {
-      this.callback = callback;
     }
 
-    public void start(Environment env) throws IOException {
+    @Override
+    public void start(ChannelSession channel, Environment env) throws IOException {
       logger.debug("Executing command: {}", command);
       out.write((LOGIN_MESSAGE + "\r\n").getBytes());
       out.flush();
     }
 
-    public void destroy() {
+    @Override
+    public void destroy(ChannelSession channel) {
+
     }
   }
 
-  private static class CommandFactory implements org.apache.sshd.server.CommandFactory,
+  private static class CommandFactory implements org.apache.sshd.server.command.CommandFactory,
       Factory<Command> {
 
-    public Command createCommand(String command) {
+    @Override
+    public Command createCommand(ChannelSession channel, String command) {
       logger.debug("Creating command: {}", command);
       return new DemoCommand(command);
     }
