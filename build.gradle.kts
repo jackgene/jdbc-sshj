@@ -41,8 +41,8 @@ dependencies {
 }
 
 group = "com.cekrlic"
-version = "1.0.0-SNAPSHOT"
-description = "JDBC SSH"
+version = "1.0.11"
+description = "JDBC over SSH"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
