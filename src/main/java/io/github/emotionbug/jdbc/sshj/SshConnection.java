@@ -1,4 +1,4 @@
-package com.github.emotionbug.jdbc.sshj;
+package io.github.emotionbug.jdbc.sshj;
 
 import java.sql.Array;
 import java.sql.Blob;

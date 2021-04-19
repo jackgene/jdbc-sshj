@@ -1,2 +1,2 @@
-com.github.emotionbug.jdbc.sshj.SshJDriver
-com.github.emotionbug.jdbc.sshj.SshJNativeDriver
+io.github.emotionbug.jdbc.sshj.SshJDriver
+io.github.emotionbug.jdbc.sshj.SshJNativeDriver
