@@ -42,7 +42,7 @@ dependencies {
     testImplementation("org.testng", "testng", "7.4.0")
 }
 
-group = "com.github.emotionbug"
+group = "io.github.emotionbug"
 version = "1.0.11"
 description = "JDBC over SSH"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
