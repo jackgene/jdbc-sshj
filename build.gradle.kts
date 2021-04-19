@@ -29,6 +29,7 @@ checkstyle {
 dependencies {
     implementation("com.hierynomus", "sshj", "0.31.0")
     implementation("org.slf4j", "slf4j-api", "1.7.30")
+    testImplementation("org.postgresql", "postgresql", "42.2.19")
     testImplementation("ch.qos.logback", "logback-classic", "1.2.3")
     testImplementation("mysql", "mysql-connector-java", "8.0.23")
     testImplementation("com.h2database", "h2", "1.4.200")
@@ -41,7 +42,7 @@ dependencies {
     testImplementation("org.testng", "testng", "7.4.0")
 }
 
-group = "com.cekrlic"
+group = "com.github.emotionbug"
 version = "1.0.11"
 description = "JDBC over SSH"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
