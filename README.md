@@ -135,9 +135,9 @@ You can setup your Maven dependencies like this:
 ```xml
 
 <dependency>
-  <groupId>com.cekrlic</groupId>
+  <groupId>io.github.emotionbug</groupId>
   <artifactId>jdbc-sshj</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.12</version>
 </dependency>
 ```
 
