@@ -8,7 +8,7 @@
     <withJansi>true</withJansi>
   </appender>
 
-  <logger level="DEBUG" name="com.cekrlic.jdbc"/>
+  <logger level="DEBUG" name="com.github.emotionbug.jdbc"/>
   <logger level="ERROR" name="org.apache.sshd"/>
   <logger level="OFF" name="net.schmizz.sshj.common.StreamCopier"/>
   <logger level="OFF" name="net.schmizz.sshj.transport.TransportImpl"/>
