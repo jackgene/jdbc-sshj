@@ -4,9 +4,11 @@
 
 plugins {
     java
-    `maven-publish`
+    signing
     checkstyle
+    `maven-publish`
     id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
 }
 
 repositories {
@@ -43,13 +45,64 @@ dependencies {
 }
 
 group = "io.github.emotionbug"
-version = "1.0.11"
+version = "1.0.12"
 description = "JDBC over SSH"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
+
 publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            pom {
+                name.set("jdbc-sshj")
+                description.set("JDBC over SSH")
+                url.set("https://github.com/emotionbug/jdbc-sshj")
+                licenses {
+                    license {
+                        name.set("The Apache Software License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                        distribution.set("repo")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("emotionbug")
+                        name.set("emotionbug")
+                    }
+                }
+
+                issueManagement {
+                    url.set("https://github.com/emotionbug/jdbc-sshj/issues")
+                    system.set("GitHub Issues")
+                }
+
+                scm {
+                    connection.set("scm:git:git:github.com/emotionbug/jdbc-sshj.git")
+                    developerConnection.set("scm:git:git@github.com:emotionbug/jdbc-sshj.git")
+                    url.set("https://github.com/emotionbug/jdbc-sshj")
+                }
+            }
+        }
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+signing {
+    sign(publishing.publications)
+}
+
+nexusPublishing {
+    repositories {
+        create("Sonatype") {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
     }
 }
 

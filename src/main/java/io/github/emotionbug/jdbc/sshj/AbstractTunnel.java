@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author boky
- * @created 11/02/2017 18:10
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class AbstractTunnel {

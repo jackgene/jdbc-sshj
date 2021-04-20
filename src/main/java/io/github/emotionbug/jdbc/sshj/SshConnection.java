@@ -21,7 +21,6 @@ import java.util.concurrent.Executor;
 
 /**
  * @author boky
- * @created 11/02/2017 20:06
  */
 public class SshConnection implements Connection {
 
