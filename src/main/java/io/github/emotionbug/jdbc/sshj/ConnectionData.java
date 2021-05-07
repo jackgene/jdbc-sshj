@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author boky
- * @created 11/02/2017 17:47
  */
 public class ConnectionData {
 

@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author boky
- * @created 11/02/2017 17:50
  */
 public class SshNativeTunnel extends AbstractTunnel {
 

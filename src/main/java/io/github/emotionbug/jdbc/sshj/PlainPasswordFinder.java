@@ -5,7 +5,6 @@ import net.schmizz.sshj.userauth.password.Resource;
 
 /**
  * @author boky
- * @created 08/02/2017 15:01
  */
 public class PlainPasswordFinder implements PasswordFinder {
 
