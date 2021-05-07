@@ -128,8 +128,6 @@ mvn clean install
 
 ## Maven dependencies
 
-*TODO: The JAR is not available in public repositories yet*
-
 You can setup your Maven dependencies like this:
 
 ```xml
@@ -143,7 +141,7 @@ You can setup your Maven dependencies like this:
 
 ## Copyright
 
-This project cloned on below repositories.
+This project cloned from below repositories.
 
 https://github.com/bokysan/jdbc-sshj
 

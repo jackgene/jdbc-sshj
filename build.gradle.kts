@@ -9,6 +9,7 @@ plugins {
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
+    id("se.bjurr.gitchangelog.git-changelog-gradle-plugin") version "1.66"
 }
 
 repositories {
@@ -112,4 +113,10 @@ tasks.withType<JavaCompile> {
 
 tasks.test {
     useTestNG()
+}
+
+val gitChangelogTask by tasks.registering(se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask::class) {
+    fromRepo = "$projectDir"
+    file = File("CHANGELOG.md")
+    templateContent = file("CHANGELOG.template").readText()
 }
