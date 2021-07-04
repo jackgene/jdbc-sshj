@@ -137,7 +137,6 @@ public abstract class AbstractSshJDriver implements Driver {
       } else {
         synchronized (a) {
           tunnel = a.get();
-          tunnel.ensureStarted();
           if (tunnel.isStopped() || !tunnel.isListening()) {
             tunnel = newTunnel(d);
             log.info("Tunnel stopped for {}, created a new tunnel: {}", url, tunnel);
