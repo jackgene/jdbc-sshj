@@ -236,6 +236,7 @@ public class SshTunnel extends AbstractTunnel {
             lpf.listen();
           } catch (IOException e) {
             ioe = e;
+            stop("Exception occurred setting up port forwarder: " + e.getMessage());
             synchronized (mutex) {
               mutex.notify();
             }
