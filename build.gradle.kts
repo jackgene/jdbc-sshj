@@ -9,7 +9,7 @@ plugins {
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
-    id("se.bjurr.gitchangelog.git-changelog-gradle-plugin") version "1.66"
+    id("se.bjurr.gitchangelog.git-changelog-gradle-plugin") version "1.71.4"
 }
 
 repositories {
@@ -46,7 +46,7 @@ dependencies {
 }
 
 group = "io.github.emotionbug"
-version = "1.0.12"
+version = "1.0.13"
 description = "JDBC over SSH"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -117,6 +117,6 @@ tasks.test {
 
 val gitChangelogTask by tasks.registering(se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask::class) {
     fromRepo = "$projectDir"
-    file = File("CHANGELOG.md")
+    file = File(projectDir, "CHANGELOG.md")
     templateContent = file("CHANGELOG.template").readText()
 }

@@ -1,3 +1,31 @@
+## 1.0.13
+### GitHub [#9](https://github.com/emotionbug/jdbc-sshj/pull/9) Resolves issue 8  
+
+**Merge pull request #9 from jackgene/master**
+
+ * recover from tunnel disconnections/failures under certain circumstances
+
+[3361f83053e672f](https://github.com/emotionbug/jdbc-sshj/commit/3361f83053e672f) Alex Kwak *2021-07-05 06:09:03*
+
+
+### No issue
+
+**Stop the tunnel in the event of an IOException such that retry-logic is attempted.**
+
+
+[bd7d954538529f5](https://github.com/emotionbug/jdbc-sshj/commit/bd7d954538529f5) Jack Leow *2021-07-04 23:39:17*
+
+**Do not call `tunnel.ensureStarted()` when obtaining a cached tunnel, as this throws an exception if the tunnel isn't started, preventing the retry-logic from ever being executed.**
+
+
+[af29b08874fe8ec](https://github.com/emotionbug/jdbc-sshj/commit/af29b08874fe8ec) Jack Leow *2021-07-04 23:38:24*
+
+**chore: fix CHANGELOG / README**
+
+
+[ef97d0e1e1ca343](https://github.com/emotionbug/jdbc-sshj/commit/ef97d0e1e1ca343) Alex Kwak *2021-05-07 00:52:38*
+
+
 ## 1.0.12
 ### GitHub #2021   
 
