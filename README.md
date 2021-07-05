@@ -1,15 +1,15 @@
 # jdbc-sshj
 
-A JDBC Driver Wrapper which connects over SSH to the target database. Please note that only one port
-is fowarded, so forget about connecting to Oracle on Windows.
+A JDBC Driver Wrapper which connects over SSH to the target database. Please note that only one port is fowarded, so
+forget about connecting to Oracle on Windows.
 
-This project was created using code from [jdbc-ssh](https://github.com/monkeysintown/jdbc-ssh) but
-the underlying implementation of SSH has been switched from [JSch](http://www.jcraft.com/jsch/) to
-[SSHJ](https://github.com/hierynomus/sshj) which seems to be updated more frequently, and knows how
-to connect to newer encryption standards of SSH.
+This project was created using code from [jdbc-ssh](https://github.com/monkeysintown/jdbc-ssh) but the underlying
+implementation of SSH has been switched from [JSch](http://www.jcraft.com/jsch/) to
+[SSHJ](https://github.com/hierynomus/sshj) which seems to be updated more frequently, and knows how to connect to newer
+encryption standards of SSH.
 
-The Driver will by default load your `known_hosts` file and will refuse to connect if the host is
-not in the list. To supress this behaviour, set `verify_hosts=off`.
+The Driver will by default load your `known_hosts` file and will refuse to connect if the host is not in the list. To
+supress this behaviour, set `verify_hosts=off`.
 
 ## Usage
 
@@ -22,12 +22,12 @@ Usage is simple:
 ### Syntax
 
 There are two versions of this driver: the *JDBC-SSHJ*, which uses
-buit-in [SSH client](https://github.com/hierynomus/sshj) and *JDBC-SSHJ-NATIVE*, which spins off
-local `ssh` session. Each has its own advantages and downfalls:
+buit-in [SSH client](https://github.com/hierynomus/sshj) and *JDBC-SSHJ-NATIVE*, which spins off local `ssh` session.
+Each has its own advantages and downfalls:
 
 - *SSHJ* is more cross-platform and does not depend on any libraries
-- *SSHJ-NATIVE* can support newer OpenSSH features and can use your `.ssh/config` but it's not
-  cross-platform. Windows users, beware.
+- *SSHJ-NATIVE* can support newer OpenSSH features and can use your `.ssh/config` but it's not cross-platform. Windows
+  users, beware.
 
 The JDBC-SSHJ uses the following syntax:
 
@@ -81,15 +81,14 @@ any-parameters-which-you-might-send-to-ssh* | Anything you type here is going to
 keepalive.command* | Command to run on the remote server to keep the session alive. If not set, your session *
 might* timeout. | `ping localhost` |
 
-Please note that the driver will open a local port and forward it to the server. It will inject the
-local host and port into your original JDBC URL when it sees the text `{{host}}` and `{{port}}`,
-respectively.
+Please note that the driver will open a local port and forward it to the server. It will inject the local host and port
+into your original JDBC URL when it sees the text `{{host}}` and `{{port}}`, respectively.
 
-Driver will listen on a local IP in the range from 127.0.1.2 - 127.0.1.200 and a random port in the
-range of 20000 - 20110. On OS X, though, only 127.0.0.1 is used, as Mac by default doesn't listen to
-anything else than this IP. See
-[StackOverflow](https://superuser.com/questions/458875/how-do-you-get-loopback-addresses-other-than-127-0-0-1-to-work-on-os-x)
-for more details on this.
+Driver will listen on a local IP in the range from 127.0.1.2 - 127.0.1.200 and a random port in the range of 20000 -
+
+20110. On OS X, though, only 127.0.0.1 is used, as Mac by default doesn't listen to anything else than this IP. See
+       [StackOverflow](https://superuser.com/questions/458875/how-do-you-get-loopback-addresses-other-than-127-0-0-1-to-work-on-os-x)
+       for more details on this.
 
 ### Example
 
@@ -99,8 +98,7 @@ If your original URL was:
 jdbc:postgresql://10.10.11.11:5432/demo-1?ssl=true&allowEncodingChanges=true
 ```
 
-And you need to connect to this server from the outside, change it like this (split into lines for
-legibility):
+And you need to connect to this server from the outside, change it like this (split into lines for legibility):
 
 ```
 jdbc:sshj://demo.example.org
@@ -126,18 +124,23 @@ If you want to run the tests (Derby and H2 in server mode):
 mvn clean install
 ```
 
-## Maven dependencies
+## dependencies
 
-You can setup your Maven dependencies like this:
+You can setup your dependencies like this:
 
-```xml
+- Maven
+  ```xml
+  <dependency>
+    <groupId>io.github.emotionbug</groupId>
+    <artifactId>jdbc-sshj</artifactId>
+    <version>1.0.13</version>
+  </dependency>
+  ```
 
-<dependency>
-  <groupId>io.github.emotionbug</groupId>
-  <artifactId>jdbc-sshj</artifactId>
-  <version>1.0.12</version>
-</dependency>
-```
+- Gradle
+  ```kotlin 
+  implementation("io.github.emotionbug:jdbc-sshj:1.0.13")
+  ```
 
 ## Copyright
 
