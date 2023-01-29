@@ -75,11 +75,11 @@ jdbc:sshj-native://<any-parameters-which-you-might-send-to-ssh>
 Please note that the driver will open a local port and forward it to the server. It will inject the local host and port
 into your original JDBC URL when it sees the text `{{host}}` and `{{port}}`, respectively.
 
-Driver will listen on a local IP in the range from 127.0.1.2 - 127.0.1.200 and a random port in the range of 20000 -
-
-20110. On OS X, though, only 127.0.0.1 is used, as Mac by default doesn't listen to anything else than this IP. See
-       [StackOverflow](https://superuser.com/questions/458875/how-do-you-get-loopback-addresses-other-than-127-0-0-1-to-work-on-os-x)
-       for more details on this.
+Driver will listen on a local IP in the range from 127.0.1.2 - 127.0.1.200 and a random port in the range of
+20000 - 20110. On OS X, though, only 127.0.0.1 is used, as Mac by default doesn't listen to anything else than this IP.
+See
+[StackOverflow](https://superuser.com/questions/458875/how-do-you-get-loopback-addresses-other-than-127-0-0-1-to-work-on-os-x)
+for more details on this.
 
 ### Example
 
