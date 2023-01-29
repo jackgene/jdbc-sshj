@@ -115,16 +115,16 @@ jdbc:sshj://demo.example.org
 If you just want to compile the project without running the tests:
 
 ```
-mvn -DskipTests clean install
+./gradlew clean build
 ```
 
 If you want to run the tests (Derby and H2 in server mode):
 
 ```
-mvn clean install
+./gradlew clean test
 ```
 
-## dependencies
+## Dependencies
 
 You can setup your dependencies like this:
 
