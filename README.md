@@ -44,18 +44,18 @@ jdbc:sshj://[user@]<host>[:<port>]
 	<your-original-url-with-{{port}}>
 ```
 
-| Parameter                     | Description                                                                                                       | Example                        |
-|-------------------------------|-------------------------------------------------------------------------------------------------------------------|--------------------------------|
-| *jdbc:sshj://<host>[:<port>]* | The *host* and *port* of the remote SSH server. Port is optional.                                                 | `jdbc:sshj://demo.example.org` |
-| *remote*                      | The *host* and *port* of the database on the remote server.                                                       | `10.11.12.13:5432`             |
-| *username*                    | The SSH username. Alternatively, specify it before the `@` sign in the host name                                  | `demo`                         |
-| *password*                    | The SSH password, if you want to try password authentication.                                                     | `demo123`                      |
-| *public.key.file*             | Path to the file with the public key. Sometimes needed if not embedded in private key or not on assumed location. | `~/.ssh/id_rsa.pub`            |
-| *private.key.file*            | Path to the file with a private key.                                                                              | `~/.ssh/id_rsa`                |
-| *private.key.password*        | Password for the private key, if any.                                                                             | `demo1234`                     |
-| *private.key.file.format*     | File format. Putty private key files and OpenSSH files are accepted. By default it tries to load OPENSSH format.  | `PUTTY`                        | 
-| *drivers*                     | Comma separated list of drivers (class files) to preload.                                                         | `org.postgresql.Driver`        | 
-| *verify_hosts*                | Suppress host verification. Driver will not complain on new/unknown hosts.                                        | `off`                          | 
+| Parameter                     | Description                                                                                                                                              | Example                        |
+|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+| *jdbc:sshj://<host>[:<port>]* | The *host* and *port* of the remote SSH server. Port is optional.                                                                                        | `jdbc:sshj://demo.example.org` |
+| *remote*                      | The *host* and *port* of the database on the remote server.                                                                                              | `10.11.12.13:5432`             |
+| *username*                    | The SSH username. Alternatively, specify it before the `@` sign in the host name                                                                         | `demo`                         |
+| *password*                    | The SSH password, if you want to try password authentication.                                                                                            | `demo123`                      |
+| *public.key.file*             | Path to the file with the public key. Sometimes needed if not embedded in private key or not on assumed location.                                        | `~/.ssh/id_rsa.pub`            |
+| *private.key.file*            | Path to the file with a private key.                                                                                                                     | `~/.ssh/id_rsa`                |
+| *private.key.password*        | Password for the private key, if any.                                                                                                                    | `demo1234`                     |
+| *private.key.file.format*     | Optional private key file format. `PUTTY` or `OPENSSH` are accepted, mainly for backward compatibility. If omitted (recommended) let SshJ detect format. | `PUTTY`                        | 
+| *drivers*                     | Comma separated list of drivers (class files) to preload.                                                                                                | `org.postgresql.Driver`        | 
+| *verify_hosts*                | Suppress host verification. Driver will not complain on new/unknown hosts.                                                                               | `off`                          | 
 
 The JDBC-SSHJ NATIVE uses the following syntax:
 
